@@ -46,6 +46,7 @@
 
 body{
     background-image: url("https://janschreiber.github.io/img2/black-chalk.jpg");
+    margin-top: 5em !important;
 }
 
 div:where(.swal2-container).swal2-center>.swal2-popup {
