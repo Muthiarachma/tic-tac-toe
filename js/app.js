@@ -18,14 +18,36 @@ let currentPlayer = "X";
 let running = false;
 let o_win = 0;
 let x_win = 0;
+let compInGame = false;
 
 initializeGame();
+
+document.addEventListener('DOMContentLoaded', function() {
+    var modal = document.getElementsByClassName("modal")[0];
+    
+});
 
 function initializeGame() {
   cells.forEach((cell) => cell.addEventListener("click", cellClicked));
   restartBtn.addEventListener("click", restartGame);
   statusText.textContent = `${currentPlayer}'s turn`;
   running = true;
+
+  setTimeout(showOptions, 500);
+}
+
+function getOptions() {
+    if (document.getElementById('PvsP').checked === true) {
+        compInGame = false;
+    } else {
+        compInGame = true;
+    }
+    
+    document.getElementById("optionsDlg").style.display = "none";
+}
+
+function showOptions() {
+    document.getElementById("optionsDlg").style.display = "block";
 }
 
 function cellClicked() {
@@ -37,6 +59,27 @@ function cellClicked() {
 
   updateCell(this, cellIndex);
   checkWinner();
+}
+
+function cellClickedComp(currentPlayer, index) {
+    let selectedCell = Array.from(cells).find(cell => cell.getAttribute('cellindex') == index);
+selectedCell.textContent = 'O';
+
+  updateCell(currentPlayer, index);
+  checkWinner();
+}
+
+function comp(){
+    let emptyIndexes = options.reduce(function(acc, option, index) {
+        if (option === '') {
+            acc.push(index);
+        }
+        return acc;
+    }, []);
+    
+    let randomIndex = emptyIndexes[Math.floor(Math.random() * emptyIndexes.length)];
+
+    return randomIndex;
 }
 
 function updateCell(cell, index) {
@@ -105,6 +148,10 @@ function checkWinner() {
       });
   } else {
     changePlayer();
+    if(currentPlayer === "O" && compInGame){
+        let indexComp = comp();
+        cellClickedComp(currentPlayer, indexComp);
+    }
   }
 }
 
@@ -116,3 +163,9 @@ function restartGame() {
   cells.forEach((cell) => (cell.textContent = ""));
   running = true;
 }
+
+function closeModal(id) {
+    document.getElementById(id).style.display = "none";
+}
+
+
